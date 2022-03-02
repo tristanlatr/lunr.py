@@ -20,19 +20,18 @@ certain words, you could use a normalisation pipeline function to force one
 token into the other:
 
 ```python
-from lunr import lunr, get_default_builder
-import lunr.pipeline.Pipeline
+from lunr import lunr, get_default_builder, pipeline, token
 
 documents = [...]
 
 builder = get_default_builder()
-def normalise_spelling(token, i, tokens) {
-    if str(token) == "gray":
+def normalise_spelling(token: token.Token, i, tokens) {
+    if token.string == "gray":
         return token.update(lambda: "grey")
     else:
         return token
 
-lunr.pipeline.Pipeline.register_function(normalise_spelling)
+pipeline.Pipeline.register_function(normalise_spelling)
 builder.pipeline.add(normalise_spelling)
 
 idx = lunr(ref="id", fields=("title", "body"), documents=documents, builder=builder)
